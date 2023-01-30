@@ -50,7 +50,7 @@ class Game extends React.Component {
 			ironJewelryCrafters: 0,
 			ironJewelryCrafterTimer: 0,
 
-			money: 2000,
+			money: 0,
 			adsPlaced: 0,
 			milestone: 0,
 
