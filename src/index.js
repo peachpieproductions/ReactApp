@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Progressbar from './Progress_bar';
 
+// - APP IS HOSTED ON VERCEL
+
 //____To Do____
 // - Taco Truck image at top with logo
 // - Iron Miners -> buy pickaxe -> mine for Iron and Hire Iron Miner -> Buy Furnace -> Smelt ingots -> buy workbench -> Craft Counterfeit Jewelry
@@ -12,15 +14,12 @@ import Progressbar from './Progress_bar';
 // - food should show its price somwhere
 
 //___Notes____
-// - 
-
-class WorkerData {
-	constructor(tag, workerCount, workerTimerLimit) {
-		this.tag = tag
-		this.workerCount = workerCount
-		this.workerTimerLimit = workerTimerLimit
-	}
-}
+// - chance of miner finding ore should be higher (maybe + .01 for each miner count)
+// - ads to buy (limit 48)
+// - last 16 ads cost exponentially more
+// - put iron jewelry count under food items
+// - cost per miner and smelter is checking wrong value
+// - maybe miner/smelter/crafter should cost exponential price after 8
 
 class Game extends React.Component {
 	
@@ -50,7 +49,7 @@ class Game extends React.Component {
 			ironJewelryCrafters: 0,
 			ironJewelryCrafterTimer: 0,
 
-			money: 0,
+			money: 2000,
 			adsPlaced: 0,
 			milestone: 0,
 
