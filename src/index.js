@@ -209,7 +209,7 @@ class Game extends React.Component {
 		if (this.state.milestone == 1 && this.state.money >= 480) this.setState({milestone: 2})
 		if (this.state.milestone == 2 && this.state.money >= 1200) this.setState({milestone: 3})
 		if (this.state.milestone == 3 && this.state.money >= 5000) this.setState({milestone: 4})
-		if (this.sate.money >= 1000000000) this.winTheGame();
+		if (this.state.money >= 1000000000) this.winTheGame();
 	}
 	
 	offerBurrito() {
