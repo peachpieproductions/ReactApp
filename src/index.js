@@ -7,8 +7,7 @@ import mainLogo from './tacoTruckLogo.png';
 // - APP IS HOSTED ON VERCEL
 
 //____To Do____
-// - buy better banjo at milestone 3 (2500$) earns 2$ per play
-// - Maybe at each milestone unlock a "need" (hunger, sleep, boredom)
+// - Win condition -> make 1 billion dollars to save the local wildlife refuge (they wanna turn it into a mall)
 
 //___Notes____
 // - 
@@ -44,10 +43,17 @@ class Game extends React.Component {
 			ironItemCount: 0,
 			ironItemCrafters: 0,
 
+			unlockedSturdyPickaxe: false,
+			diamondsCount: 0,
+			diamondMiners: 0,
+
 			money: 0,
 			adsPlaced: 0,
 			milestone: 0,
 			unlockedBanjo: false,
+			banjoUpgrade: 0,
+			showHelpText: false,
+			gameWon: false,
 
 			taskActiveTag: null,
 			taskProgress: 0,
@@ -70,38 +76,48 @@ class Game extends React.Component {
 		let burritocnt = this.state.burritoCount
 		let woodcnt = this.state.woodCount
 		let wooditemcnt = this.state.woodItemCount
+		let woodcraftprog = this.state.woodCraftersProgress
 		let ijewcnt = this.state.ironItemCount
 		let iore = this.state.ironOreCount
 		let iingot = this.state.ironIngotCount
+		let iingotprog = this.state.ironSmeltersProgress
+		let diacnt = this.state.diamondsCount
 		let moneyGained = 0
 
 		//Sell Items
-		let tacosCanSell = this.state.adsPlaced <= 48 ? 1 : Math.min(tacocnt, 1 * (this.state.adsPlaced / 48))
+		let tacosCanSell = this.state.adsPlaced <= 45 ? 1 : Math.min(tacocnt, 1 * (this.state.adsPlaced / 45))
 		if (tacocnt >= tacosCanSell && tacocnt >= 1) {
-			if (Math.random() < .04 + this.state.adsPlaced * .02) {
+			if (Math.random() < .1 + this.state.adsPlaced * .02) {
 				tacocnt = tacocnt - tacosCanSell
 				moneyGained += tacosCanSell * 1
 			}
 		}
-		let burritosCanSell = this.state.adsPlaced <= 96 ? 1 : Math.min(burritocnt, 1 * (this.state.adsPlaced / 48))
+		let burritosCanSell = this.state.adsPlaced <= 90 ? 1 : Math.min(burritocnt, 1 * (this.state.adsPlaced / 90))
 		if (burritocnt >= burritosCanSell && burritocnt >= 1) {
-			if (Math.random() < .04 + this.state.adsPlaced * .01) {
+			if (Math.random() < .1 + this.state.adsPlaced * .01) {
 				burritocnt = burritocnt - burritosCanSell
 				moneyGained += burritosCanSell * 2
 			}
 		}
-		let woodItemCanSell = this.state.adsPlaced <= 96 ? 1 : Math.min(wooditemcnt, 1 * (this.state.adsPlaced / 48))
+		let woodItemCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(wooditemcnt, 1 * (this.state.adsPlaced / 180))
 		if (wooditemcnt >= woodItemCanSell && wooditemcnt >= 1) {
-			if (Math.random() < .04 + this.state.adsPlaced * .005) {
+			if (Math.random() < .1 + this.state.adsPlaced * .005) {
 				wooditemcnt = wooditemcnt - woodItemCanSell
 				moneyGained += woodItemCanSell * 4
 			}
 		}
-		let ironJewCanSell = this.state.adsPlaced <= 96 ? 1 : Math.min(ijewcnt, 1 * (this.state.adsPlaced / 48))
+		let ironJewCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(ijewcnt, 1 * (this.state.adsPlaced / 180))
 		if (ijewcnt >= ironJewCanSell && ijewcnt >= 1) {
-			if (Math.random() < .04 + this.state.adsPlaced * .005) {
+			if (Math.random() < .1 + this.state.adsPlaced * .005) {
 				ijewcnt = ijewcnt - ironJewCanSell
 				moneyGained += ironJewCanSell * 8
+			}
+		}
+		let diamondsCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(diacnt, 1 * (this.state.adsPlaced / 180))
+		if (diacnt >= diamondsCanSell && diacnt >= 1) {
+			if (Math.random() < .1 + this.state.adsPlaced * .005) {
+				diacnt = diacnt - diamondsCanSell
+				moneyGained += diamondsCanSell * 64
 			}
 		}
 
@@ -116,36 +132,42 @@ class Game extends React.Component {
 			woodcnt = woodcnt + (this.state.woodCutters / 64)
 		}
 		if (woodcnt >= 1 && this.state.woodCrafters > 0) {
-			this.setState({woodCraftersProgress: this.state.woodCraftersProgress + this.state.woodCrafters / 96 })
-			if (this.state.woodCraftersProgress >= 1) {
-				wooditemcnt = wooditemcnt + this.state.woodCraftersProgress
-				woodcnt = woodcnt - this.state.woodCraftersProgress
-				this.setState({woodCraftersProgress: 0})
+			woodcraftprog = woodcraftprog + this.state.woodCrafters / 96 
+			if (woodcraftprog >= 1) {
+				wooditemcnt = wooditemcnt + woodcraftprog
+				woodcnt = woodcnt - woodcraftprog
+				woodcraftprog = 0
 			}
 		}
 		if (this.state.ironMiners > 0) {
 			if (Math.random() < .64 + this.state.ironMiners * .01) iore = iore + (this.state.ironMiners / 64) 
 		}
 		if (iore >= 1 && this.state.ironSmelters > 0) {
-			this.setState({ironSmeltersProgress: this.state.ironSmeltersProgress + this.state.ironSmelters / 128 })
-			if (this.state.ironSmeltersProgress >= 1) {
-				iingot = iingot + this.state.ironSmeltersProgress
-				iore = iore - this.state.ironSmeltersProgress 
-				this.setState({ironSmeltersProgress: 0})
+			iingotprog = iingotprog + this.state.ironSmelters / 128 
+			if (iingotprog >= 1) {
+				iingot = iingot + iingotprog
+				iore = iore - iingotprog 
+				iingotprog = 0
 			}
 		}
 		if (iingot >= 1 && this.state.ironItemCrafters > 0) {
 			ijewcnt = ijewcnt + (this.state.ironItemCrafters / 128) * 2
 			iingot = iingot - (this.state.ironItemCrafters / 128)
 		}
+		if (this.state.diamondMiners > 0) {
+			if (Math.random() < .64 + this.state.diamondMiners * .01) diacnt = diacnt + (this.state.diamondMiners / 64)
+		}
 
 		this.setState({tacoCount: tacocnt})
 		this.setState({burritoCount: burritocnt})
 		this.setState({woodCount: woodcnt})
 		this.setState({woodItemCount: wooditemcnt})
+		this.setState({woodCraftersProgress: woodcraftprog})
 		this.setState({ironOreCount: iore})
 		this.setState({ironIngotCount: iingot})
+		this.setState({ironSmeltersProgress: iingotprog})
 		this.setState({ironItemCount: ijewcnt})
+		this.setState({diamondsCount: diacnt})
 		if (moneyGained > 0) this.earnMoney(moneyGained)
 
 		if (this.state.taskActiveTag) {
@@ -154,6 +176,10 @@ class Game extends React.Component {
 				this.endTask();
 			}
 		}
+	}
+
+	winTheGame() {
+		this.setState({gameWon: true })
 	}
 	
 	hireTacoChef() {
@@ -182,6 +208,8 @@ class Game extends React.Component {
 		if (this.state.milestone == 0 && this.state.money >= 116) this.setState({milestone: 1})
 		if (this.state.milestone == 1 && this.state.money >= 480) this.setState({milestone: 2})
 		if (this.state.milestone == 2 && this.state.money >= 1200) this.setState({milestone: 3})
+		if (this.state.milestone == 3 && this.state.money >= 5000) this.setState({milestone: 4})
+		if (this.sate.money >= 1000000000) this.winTheGame();
 	}
 	
 	offerBurrito() {
@@ -209,6 +237,7 @@ class Game extends React.Component {
 		else if (tag === "ironMiner") return 96 * (this.state.ironMiners + 1)
 		else if (tag === "ironSmelter") return 128 * (this.state.ironSmelters + 1)
 		else if (tag === "ironCrafter") return 96 * (this.state.ironItemCrafters + 1)
+		else if (tag === "diamondMiner") return 512 * (this.state.diamondMiners + 1)
 	}
 
 	chopDownTree() {
@@ -294,11 +323,46 @@ class Game extends React.Component {
 		}
 	}
 
+	buySturdyPickaxe() {
+		if (this.state.money >= 5000) {
+			this.setState({money: this.state.money - 5000})
+			this.setState({unlockedSturdyPickaxe: true })
+		}
+	}
+
+	mineForDiamond() {
+		this.startTask("MiningDiamond", 24)
+	}
+
+	hireDiamondMiner() {
+		if (this.state.money >= this.getCost("diamondMiner")) {
+			this.setState({money: this.state.money - this.getCost("diamondMiner")})
+			this.setState({diamondMiners: this.state.diamondMiners + 1 })
+		}
+	}
+
 	buyBanjo() {
 		if (this.state.money >= 128) {
 			this.setState({money: this.state.money - 128})
 			this.setState({unlockedBanjo: true })
 		}
+	}
+
+	upgradeBanjo() {
+		if (this.state.banjoUpgrade == 0 && this.state.milestone > 1 && this.state.money >= 960) {
+			this.setState({money: this.state.money - 960})
+			this.setState({banjoUpgrade: 1 })
+		}
+		if (this.state.banjoUpgrade == 1 && this.state.milestone > 2 && this.state.money >= 2500) {
+			this.setState({money: this.state.money - 2500})
+			this.setState({banjoUpgrade: 2 })
+		}
+	}
+
+	playBanjoForTips() {
+		if (this.state.banjoUpgrade == 0) this.earnMoney(1)
+		if (this.state.banjoUpgrade == 1) this.earnMoney(2)
+		if (this.state.banjoUpgrade == 2) this.earnMoney(4)
 	}
 
 	startTask(taskTag, taskLength) {
@@ -317,6 +381,7 @@ class Game extends React.Component {
 		if (this.state.taskActiveTag === "MiningIronOre") { if (Math.random() < .32) this.setState({ironOreCount: this.state.ironOreCount + 1 }) }
 		if (this.state.taskActiveTag === "SmeltIronOre") { this.setState({ironIngotCount: this.state.ironIngotCount + 1 }) }
 		if (this.state.taskActiveTag === "CraftIronItem") { this.setState({ironItemCount: this.state.ironItemCount + 2 }) }
+		if (this.state.taskActiveTag === "MiningDiamond") { if (Math.random() < .32) this.setState({diamondsCount: this.state.diamondsCount + 1 }) }
 		this.setState({taskActiveTag: null })
 		this.setState({taskProgress: 0 })
 		this.setState({taskLength: 0 })
@@ -330,6 +395,9 @@ class Game extends React.Component {
 		return (
 			<div className="game">
 				<div> <img src={mainLogo} alt="" /> </div>
+
+				{ /*=== Win Text ===*/ }
+				{ this.state.gameWon && <><h1>YOU WIN!!!</h1> <h2>You saved the wildlife refuge! <br/> Way to go!</h2></>}
 
 				{ /*=== Base Options ===*/ }
 				<div>
@@ -407,11 +475,28 @@ class Game extends React.Component {
 					</div> 
 				}
 
+				{ /*=== Unlock Sturdy PickAxe ===*/ }
+				{ !this.state.unlockedSturdyPickaxe && this.state.milestone > 3
+					&& <div> <button onClick={this.buySturdyPickaxe.bind(this)}>Buy Sturdy Pickaxe ($5000)</button> </div> 
+				}
+
+				{ /*=== Mining Options Diamond ===*/ }
+				{ this.state.unlockedSturdyPickaxe && 
+					<div> 
+					<button onClick={this.mineForDiamond.bind(this)}>Mine for Diamonds</button> 
+					<button onClick={this.hireDiamondMiner.bind(this)}>Hire Diamond Miner (${this.getCost("diamondMiner")})</button> 
+					</div> 
+				}
+
 				{ /*=== Banjo ===*/ }
 				{ this.state.milestone > 0 && 
 					<div> 
-						{ !this.state.unlockedBanjo && <button onClick={this.buyBanjo.bind(this)}>Buy Banjo ($128)</button> }
-						{ this.state.unlockedBanjo && <button onClick={() => this.earnMoney(1)}>Play Banjo for Tips</button> }
+						{ !this.state.unlockedBanjo && <button onClick={this.buyBanjo.bind(this)}>Buy Old Banjo ($128)</button> }
+						{ this.state.unlockedBanjo && <button onClick={this.playBanjoForTips.bind(this)}>Play Banjo for Tips</button> }
+						{ this.state.unlockedBanjo && this.state.milestone > 1 && this.state.banjoUpgrade == 0 && 
+							<button onClick={this.upgradeBanjo.bind(this)}>Buy Fancy Banjo ($960)</button> }
+						{ this.state.unlockedBanjo && this.state.milestone > 2 && this.state.banjoUpgrade == 1 && 
+							<button onClick={this.upgradeBanjo.bind(this)}>Buy Golden Banjo ($2500)</button> }
 					</div> 
 				}
 				
@@ -425,6 +510,10 @@ class Game extends React.Component {
 					{ this.state.unlockedBurrito && <div> [$2] Burritos: {this.state.burritoCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
 					{ this.state.unlockedWoodWorkbench && <div> [$4] Wood Spoons: {this.state.woodItemCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
 					{ this.state.unlockedIronWorkbench && <div> [$8] Katanas: {this.state.ironItemCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
+					{ this.state.unlockedSturdyPickaxe && <div> [$64] Diamonds: {this.state.diamondsCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
+					<div> <br/> </div>
+					{ /*=== Other ===*/ }
+					{ this.state.adsPlaced > 0 && <div> Ads: {this.state.adsPlaced}<br/> </div> }
 					<div> <br/> </div>
 					{ /*=== Crafting ===*/ }
 					{ (this.state.unlockedPickaxe || this.state.unlockedAxe) && <div><u> CRAFTING </u></div> }
@@ -441,15 +530,40 @@ class Game extends React.Component {
 					{ this.state.ironMiners > 0 && <div> Iron Miners: {this.state.ironMiners} <br/> </div> }
 					{ this.state.ironSmelters > 0 && <div> Iron Smelters: {this.state.ironSmelters} <br/> </div> }
 					{ this.state.ironItemCrafters > 0 && <div> Katana Crafters: {this.state.ironItemCrafters} <br/> </div> }
+					{ this.state.diamondMiners > 0 && <div> Diamond Miners: {this.state.diamondMiners} <br/> </div> }
 					<div> <br/> </div>
-					{ /*=== Other ===*/ }
-					{ this.state.adsPlaced > 0 && <div> Ads: {this.state.adsPlaced}<br/> </div> }
 				</div>
 
 				{ /*=== Progress Bar ===*/ }
 				{ this.state.taskProgress > 1 && 
 				<Progressbar bgcolor="#3B9AFF" progress={((this.state.taskProgress / this.state.taskLength) * 100).toString()} height={8} /> 
 				}
+
+				{ /*=== Help Text ===*/ }
+				<div>
+				{ !this.state.showHelpText && <button onClick={() => this.setState({showHelpText: !this.state.showHelpText})}>Click Here to Get Started</button> }
+				{ this.state.showHelpText && 
+					<div>
+					<button onClick={() => this.setState({showHelpText: !this.state.showHelpText})}>Hide Info</button> 
+					<div> <br/> </div>
+					<b>__Story__</b> <br/>The city has decided to destroy the local wildlife refuge to build a mall in its place. You have made it your mission to save the 
+					refuge and all the animals. You will need 1,000,000,000 dollars to stop the evil government. You have decided to take over your late 
+					grampas taco stand in hopes of raising enough money. This is the beginning of your journey!
+					<div> <br/> </div>
+					<b>__Tips__</b>  <br/>
+					- Make sure to buy ads, the speed items sell depends on your popularity. more ads = more popularity <br/>
+					- If you find yourself waiting, make more tacos, or play the banjo for tips <br/>
+					- Tacos dont go bad, so make as many as you can, it always good to be stocked up <br/>
+					- Make sure to balance your workers, watch the input/output and adjust accordingly <br/>
+					- Its good to take a break once you've got a steady flow going, just keep the tab active <br/>
+					<div> <br/> </div>
+					<b>__Game__</b> <br/>
+					Created by: Ben James<br/>
+					Made in React<br/>
+					2023<br/>
+					</div>
+				}
+				</div>
 
 				{this.state.debugText}
 				
