@@ -12,8 +12,10 @@ import mainLogo from './tacoTruckLogo.png';
 //___Notes____
 // - 
 
+document.body.style = 'background: #022228;'
+
 class Game extends React.Component {
-	
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -209,7 +211,7 @@ class Game extends React.Component {
 		if (this.state.milestone == 1 && this.state.money >= 480) this.setState({milestone: 2})
 		if (this.state.milestone == 2 && this.state.money >= 1200) this.setState({milestone: 3})
 		if (this.state.milestone == 3 && this.state.money >= 5000) this.setState({milestone: 4})
-		if (this.state.money >= 1000000000) this.winTheGame();
+		if (this.state.money >= 250000000) this.winTheGame();
 	}
 	
 	offerBurrito() {
@@ -394,135 +396,135 @@ class Game extends React.Component {
 	render() {
 		return (
 			<div className="game">
-				<div> <img src={mainLogo} alt="" /> </div>
+				<div> <img src={mainLogo} alt="" style={{border: "2px solid white"}}/> </div>
 
 				{ /*=== Win Text ===*/ }
 				{ this.state.gameWon && <><h1>YOU WIN!!!</h1> <h2>You saved the wildlife refuge! <br/> Way to go!</h2></>}
 
 				{ /*=== Base Options ===*/ }
 				<div>
-					<button onClick={() => this.setState({tacoCount: this.state.tacoCount + 1 })}>Make Taco</button>
-					<button onClick={this.hireTacoChef.bind(this)}>Hire Taco Chef (${this.getCost("tacoChef")})</button>
-					<button onClick={this.placeAd.bind(this)}>Place Ad (${this.getCost("ad")})</button>
+					<button className="but" onClick={() => this.setState({tacoCount: this.state.tacoCount + 1 })}>Make Taco</button>
+					<button className="but" onClick={this.hireTacoChef.bind(this)}>Hire Taco Chef (${this.getCost("tacoChef")})</button>
+					<button className="but" onClick={this.placeAd.bind(this)}>Place Ad (${this.getCost("ad")})</button>
 				</div>
 				
 				{ /*=== Unlock Burrito ===*/ }
 				{ !this.state.unlockedBurrito && this.state.milestone > 0 
-					&& <div> <button onClick={this.offerBurrito.bind(this)}>Offer Burrito ($288)</button> </div> 
+					&& <div> <button className="but" onClick={this.offerBurrito.bind(this)}>Offer Burrito ($288)</button> </div> 
 				}
 				
 				{ /*=== Burrito Options ===*/ }
 				{ this.state.unlockedBurrito && 
 					<div> 
-					<button onClick={() => this.setState({burritoCount: this.state.burritoCount + 1 })}>Make Burrito</button> 
-					<button onClick={this.hireBurritoChef.bind(this)}>Hire Burrito Chef (${this.getCost("burritoChef")})</button> 
+					<button className="but" onClick={() => this.setState({burritoCount: this.state.burritoCount + 1 })}>Make Burrito</button> 
+					<button className="but" onClick={this.hireBurritoChef.bind(this)}>Hire Burrito Chef (${this.getCost("burritoChef")})</button> 
 					</div> 
 				}
 
 				{ /*=== Unlock Wood Axe ===*/ }
 				{ !this.state.unlockedAxe && this.state.milestone > 1 
-					&& <div> <button onClick={this.buyWoodAxe.bind(this)}>Buy Wood Axe ($640)</button> </div> 
+					&& <div> <button className="but" onClick={this.buyWoodAxe.bind(this)}>Buy Wood Axe ($640)</button> </div> 
 				}
 
 				{ /*=== Woodcutting Options ===*/ }
 				{ this.state.unlockedAxe && 
 					<div> 
-					<button onClick={this.chopDownTree.bind(this)}>Chop Down Tree</button> 
-					<button onClick={this.hireWoodCutter.bind(this)}>Hire Lumberjack (${this.getCost("lumberjack")})</button> 
+					<button className="but" onClick={this.chopDownTree.bind(this)}>Chop Down Tree</button> 
+					<button className="but" onClick={this.hireWoodCutter.bind(this)}>Hire Lumberjack (${this.getCost("lumberjack")})</button> 
 					</div> 
 				}
 
 				{ /*=== Wood Workbench Options ===*/ }
 				{ this.state.unlockedAxe &&
 					<div> 
-					{ !this.state.unlockedWoodWorkbench && <button onClick={this.buyWoodWorkbench.bind(this)}>Buy Wood Workbench ($240)</button> }
-					{ this.state.unlockedWoodWorkbench && <button onClick={this.craftWoodenItem.bind(this)}>Carve Wooden Spoon</button> }
+					{ !this.state.unlockedWoodWorkbench && <button className="but" onClick={this.buyWoodWorkbench.bind(this)}>Buy Wood Workbench ($240)</button> }
+					{ this.state.unlockedWoodWorkbench && <button className="but" onClick={this.craftWoodenItem.bind(this)}>Carve Wooden Spoon</button> }
 					{ this.state.unlockedWoodWorkbench && 
-						<button onClick={this.hireWoodCrafter.bind(this)}>Hire Wood Carver (${this.getCost("woodCrafter")})</button>  }
+						<button className="but" onClick={this.hireWoodCrafter.bind(this)}>Hire Wood Carver (${this.getCost("woodCrafter")})</button>  }
 					</div> 
 				}
 
 				{ /*=== Unlock PickAxe ===*/ }
 				{ !this.state.unlockedPickaxe && this.state.milestone > 2 
-					&& <div> <button onClick={this.buyPickaxe.bind(this)}>Buy Pickaxe ($1600)</button> </div> 
+					&& <div> <button className="but" onClick={this.buyPickaxe.bind(this)}>Buy Pickaxe ($1600)</button> </div> 
 				}
 
 				{ /*=== Mining Options Iron ===*/ }
 				{ this.state.unlockedPickaxe && 
 					<div> 
-					<button onClick={this.mineForIron.bind(this)}>Mine for Iron</button> 
-					<button onClick={this.hireIronMiner.bind(this)}>Hire Iron Miner (${this.getCost("ironMiner")})</button> 
+					<button className="but" onClick={this.mineForIron.bind(this)}>Mine for Iron</button> 
+					<button className="but" onClick={this.hireIronMiner.bind(this)}>Hire Iron Miner (${this.getCost("ironMiner")})</button> 
 					</div> 
 				}
 
 				{ /*=== Furnace Options ===*/ }
 				{ this.state.unlockedPickaxe && 
 					<div> 
-					{ !this.state.unlockedFurnace && <button onClick={this.buyFurnace.bind(this)}>Buy Furnace ($800)</button> }
-					{ this.state.unlockedFurnace && <button onClick={this.smeltIronOre.bind(this)}>Smelt Iron Ore</button> }
+					{ !this.state.unlockedFurnace && <button className="but" onClick={this.buyFurnace.bind(this)}>Buy Furnace ($800)</button> }
+					{ this.state.unlockedFurnace && <button className="but" onClick={this.smeltIronOre.bind(this)}>Smelt Iron Ore</button> }
 					{ this.state.unlockedFurnace && 
-						<button onClick={this.hireIronSmelter.bind(this)}>Hire Iron Smelter(${this.getCost("ironSmelter")})</button>  }
+						<button className="but" onClick={this.hireIronSmelter.bind(this)}>Hire Iron Smelter(${this.getCost("ironSmelter")})</button>  }
 					</div> 
 				}
 
 				{ /*=== Iron Workbench Options ===*/ }
 				{ this.state.unlockedFurnace &&
 					<div> 
-					{ !this.state.unlockedIronWorkbench && <button onClick={this.buyIronWorkbench.bind(this)}>Buy Iron Workbench ($640)</button> }
-					{ this.state.unlockedIronWorkbench && <button onClick={this.craftIronItem.bind(this)}>Craft Iron Katana</button> }
+					{ !this.state.unlockedIronWorkbench && <button className="but" onClick={this.buyIronWorkbench.bind(this)}>Buy Iron Workbench ($640)</button> }
+					{ this.state.unlockedIronWorkbench && <button className="but" onClick={this.craftIronItem.bind(this)}>Craft Iron Katana</button> }
 					{ this.state.unlockedIronWorkbench && 
-						<button onClick={this.hireIronCrafter.bind(this)}>Hire Katana Crafter (${this.getCost("ironCrafter")})</button>  }
+						<button className="but" onClick={this.hireIronCrafter.bind(this)}>Hire Katana Crafter (${this.getCost("ironCrafter")})</button>  }
 					</div> 
 				}
 
 				{ /*=== Unlock Sturdy PickAxe ===*/ }
 				{ !this.state.unlockedSturdyPickaxe && this.state.milestone > 3
-					&& <div> <button onClick={this.buySturdyPickaxe.bind(this)}>Buy Sturdy Pickaxe ($5000)</button> </div> 
+					&& <div> <button className="but" onClick={this.buySturdyPickaxe.bind(this)}>Buy Sturdy Pickaxe ($5000)</button> </div> 
 				}
 
 				{ /*=== Mining Options Diamond ===*/ }
 				{ this.state.unlockedSturdyPickaxe && 
 					<div> 
-					<button onClick={this.mineForDiamond.bind(this)}>Mine for Diamonds</button> 
-					<button onClick={this.hireDiamondMiner.bind(this)}>Hire Diamond Miner (${this.getCost("diamondMiner")})</button> 
+					<button className="but" onClick={this.mineForDiamond.bind(this)}>Mine for Diamonds</button> 
+					<button className="but" onClick={this.hireDiamondMiner.bind(this)}>Hire Diamond Miner (${this.getCost("diamondMiner")})</button> 
 					</div> 
 				}
 
 				{ /*=== Banjo ===*/ }
 				{ this.state.milestone > 0 && 
 					<div> 
-						{ !this.state.unlockedBanjo && <button onClick={this.buyBanjo.bind(this)}>Buy Old Banjo ($128)</button> }
-						{ this.state.unlockedBanjo && <button onClick={this.playBanjoForTips.bind(this)}>Play Banjo for Tips</button> }
+						{ !this.state.unlockedBanjo && <button className="but" onClick={this.buyBanjo.bind(this)}>Buy Old Banjo ($128)</button> }
+						{ this.state.unlockedBanjo && <button className="but" onClick={this.playBanjoForTips.bind(this)}>Play Banjo for Tips</button> }
 						{ this.state.unlockedBanjo && this.state.milestone > 1 && this.state.banjoUpgrade == 0 && 
-							<button onClick={this.upgradeBanjo.bind(this)}>Buy Fancy Banjo ($960)</button> }
+							<button className="but" onClick={this.upgradeBanjo.bind(this)}>Buy Fancy Banjo ($960)</button> }
 						{ this.state.unlockedBanjo && this.state.milestone > 2 && this.state.banjoUpgrade == 1 && 
-							<button onClick={this.upgradeBanjo.bind(this)}>Buy Golden Banjo ($2500)</button> }
+							<button className="but" onClick={this.upgradeBanjo.bind(this)}>Buy Golden Banjo ($2500)</button> }
 					</div> 
 				}
 				
 				{ /*=== Info Panel ===*/ }
 				<div>
 					{ /*=== Money ===*/ }
-					<div style={{color: 'green', fontWeight: 'bold'}}> <h2>$ {this.state.money.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})}</h2> </div>
+					<div style={{color: '#30f553', fontWeight: 'bold'}}> <h2>$ {this.state.money.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})}</h2> </div>
 					<div> <br/> </div>
 					{ /*=== Food ===*/ }
-					[$1] Tacos: {this.state.tacoCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/>
-					{ this.state.unlockedBurrito && <div> [$2] Burritos: {this.state.burritoCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
-					{ this.state.unlockedWoodWorkbench && <div> [$4] Wood Spoons: {this.state.woodItemCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
-					{ this.state.unlockedIronWorkbench && <div> [$8] Katanas: {this.state.ironItemCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
-					{ this.state.unlockedSturdyPickaxe && <div> [$64] Diamonds: {this.state.diamondsCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
+					<span className="monlab"> $1 </span> Tacos: {this.state.tacoCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/>
+					{ this.state.unlockedBurrito && <div> <span className="monlab"> $2 </span> Burritos: {this.state.burritoCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
+					{ this.state.unlockedWoodWorkbench && <div> <span className="monlab"> $4 </span> Wood Spoons: {this.state.woodItemCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
+					{ this.state.unlockedIronWorkbench && <div> <span className="monlab"> $8 </span> Katanas: {this.state.ironItemCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
+					{ this.state.unlockedSturdyPickaxe && <div> <span className="monlab"> $64 </span> Diamonds: {this.state.diamondsCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
 					<div> <br/> </div>
 					{ /*=== Other ===*/ }
 					{ this.state.adsPlaced > 0 && <div> Ads: {this.state.adsPlaced}<br/> </div> }
 					<div> <br/> </div>
 					{ /*=== Crafting ===*/ }
-					{ (this.state.unlockedPickaxe || this.state.unlockedAxe) && <div><u> CRAFTING </u></div> }
+					{ (this.state.unlockedPickaxe || this.state.unlockedAxe) && <div><span className="titlelab"> CRAFTING </span></div> }
 					{ this.state.unlockedAxe && <div> Wood Logs: {this.state.woodCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
 					{ this.state.unlockedPickaxe && <div> Iron Ore: {this.state.ironOreCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
 					{ this.state.unlockedFurnace && <div> Iron Ingot: {this.state.ironIngotCount.toLocaleString(undefined, {maximumFractionDigits: 0, roundingMode: "floor"})} <br/> </div> }
 					<div> <br/> </div>
 					{ /*=== Staff ===*/ }
-					{ (this.state.tacoChefs > 0 || this.state.burritoChefs > 0) && <div><u> STAFF </u></div> }
+					{ (this.state.tacoChefs > 0 || this.state.burritoChefs > 0) && <div><span className="titlelab"> STAFF </span></div> }
 					{ this.state.tacoChefs > 0 && <div> Taco Chefs: {this.state.tacoChefs} <br/> </div> }
 					{ this.state.burritoChefs > 0 && <div> Burrito Chefs: {this.state.burritoChefs} <br/> </div> }
 					{ this.state.woodCutters > 0 && <div> Lumberjacks: {this.state.woodCutters} <br/> </div> }
@@ -541,13 +543,13 @@ class Game extends React.Component {
 
 				{ /*=== Help Text ===*/ }
 				<div>
-				{ !this.state.showHelpText && <button onClick={() => this.setState({showHelpText: !this.state.showHelpText})}>Click Here to Get Started</button> }
+				{ !this.state.showHelpText && <button className="but" onClick={() => this.setState({showHelpText: !this.state.showHelpText})}>Click Here to Get Started</button> }
 				{ this.state.showHelpText && 
 					<div>
-					<button onClick={() => this.setState({showHelpText: !this.state.showHelpText})}>Hide Info</button> 
+					<button className="but" onClick={() => this.setState({showHelpText: !this.state.showHelpText})}>Hide Info</button> 
 					<div> <br/> </div>
 					<b>__Story__</b> <br/>The city has decided to destroy the local wildlife refuge to build a mall in its place. You have made it your mission to save the 
-					refuge and all the animals. You will need 1,000,000,000 dollars to stop the evil government. You have decided to take over your late 
+					refuge and all the animals. You will need 250,000,000 dollars to stop the evil government. You have decided to take over your late 
 					grampas taco stand in hopes of raising enough money. This is the beginning of your journey!
 					<div> <br/> </div>
 					<b>__Tips__</b>  <br/>

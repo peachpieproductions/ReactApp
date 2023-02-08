@@ -1,5 +1,6 @@
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
+  color: rgb(232, 242, 253);
   margin: 20px;
 }
 
@@ -13,5 +14,32 @@ ol, ul {
   gap: 8px;
 }
 
+.monlab {
+  background-color:#054e15;
+  color: rgb(34, 255, 107);
+  margin-right: 5px;
+  padding-bottom: 1px;
+  padding-left: 3px;
+}
 
+.titlelab {
+  background-color:#085664;
+  color: white;
+  margin-right: 5px;
+  padding-bottom: 1px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.but {
+  background-color:#085664;
+  border-color: dodgerblue;
+  border-radius: 5px;
+  color: white;
+  padding: 4px;
+}
+
+.but:hover {
+  background-color:dodgerblue;
+}
 
