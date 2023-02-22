@@ -67,10 +67,79 @@ class Game extends React.Component {
 
 	componentDidMount() {
 		this.timerID = setInterval(() => this.tick(),80);
+		this.timerID = setInterval(() => this.saveData(),3200);
+
+		this.loadData();
+		
 	}
 	
 	componentWillUnmount() {
 		clearInterval(this.timerID);
+	}
+
+	saveData() {
+		localStorage.setItem("money", this.state.money.toString())
+		localStorage.setItem("adsPlaced", this.state.adsPlaced.toString())
+		localStorage.setItem("milestone", this.state.milestone.toString())
+		localStorage.setItem("unlockedBanjo", this.state.unlockedBanjo.toString())
+		localStorage.setItem("banjoUpgrade", this.state.banjoUpgrade.toString())
+		localStorage.setItem("gameWon", this.state.gameWon.toString())
+		localStorage.setItem("tacoCount", this.state.tacoCount.toString())
+		localStorage.setItem("tacoChefs", this.state.tacoChefs.toString())
+		localStorage.setItem("unlockedBurrito", this.state.unlockedBurrito.toString())
+		localStorage.setItem("burritoCount", this.state.burritoCount.toString())
+		localStorage.setItem("burritoChefs", this.state.burritoChefs.toString())
+		localStorage.setItem("unlockedAxe", this.state.unlockedAxe.toString())
+		localStorage.setItem("unlockedWoodWorkbench", this.state.unlockedWoodWorkbench.toString())
+		localStorage.setItem("woodCount", this.state.woodCount.toString())
+		localStorage.setItem("woodItemCount", this.state.woodItemCount.toString())
+		localStorage.setItem("woodCutters", this.state.woodCutters.toString())
+		localStorage.setItem("woodCrafters", this.state.woodCrafters.toString())
+		localStorage.setItem("unlockedPickaxe", this.state.unlockedPickaxe.toString())
+		localStorage.setItem("unlockedFurnace", this.state.unlockedFurnace.toString())
+		localStorage.setItem("ironOreCount", this.state.ironOreCount.toString())
+		localStorage.setItem("ironMiners", this.state.ironMiners.toString())
+		localStorage.setItem("ironSmelters", this.state.ironSmelters.toString())
+		localStorage.setItem("ironIngotCount", this.state.ironIngotCount.toString())
+		localStorage.setItem("unlockedIronWorkbench", this.state.unlockedIronWorkbench.toString())
+		localStorage.setItem("ironItemCount", this.state.ironItemCount.toString())
+		localStorage.setItem("ironItemCrafters", this.state.ironItemCrafters.toString())
+		localStorage.setItem("unlockedSturdyPickaxe", this.state.unlockedSturdyPickaxe.toString())
+		localStorage.setItem("diamondsCount", this.state.diamondsCount.toString())
+		localStorage.setItem("diamondMiners", this.state.diamondMiners.toString())
+	}
+
+	loadData() {
+		if (localStorage.getItem("money") != undefined) this.setState({money: parseFloat(localStorage.getItem("money"))})
+		if (localStorage.getItem("adsPlaced") != undefined) this.setState({adsPlaced: parseInt(localStorage.getItem("adsPlaced"))})
+		if (localStorage.getItem("milestone") != undefined) this.setState({milestone: parseInt(localStorage.getItem("milestone"))})
+		if (localStorage.getItem("banjoUpgrade") != undefined) this.setState({banjoUpgrade: parseInt(localStorage.getItem("banjoUpgrade"))})
+		if (localStorage.getItem("tacoCount") != undefined) this.setState({tacoCount: parseFloat(localStorage.getItem("tacoCount"))})
+		if (localStorage.getItem("tacoChefs") != undefined) this.setState({tacoChefs: parseInt(localStorage.getItem("tacoChefs"))})
+		if (localStorage.getItem("burritoCount") != undefined) this.setState({burritoCount: parseFloat(localStorage.getItem("burritoCount"))})
+		if (localStorage.getItem("burritoChefs") != undefined) this.setState({burritoChefs: parseInt(localStorage.getItem("burritoChefs"))})
+		if (localStorage.getItem("woodCount") != undefined) this.setState({woodCount: parseFloat(localStorage.getItem("woodCount"))})
+		if (localStorage.getItem("woodCutters") != undefined) this.setState({woodCutters: parseInt(localStorage.getItem("woodCutters"))})
+		if (localStorage.getItem("woodItemCount") != undefined) this.setState({woodItemCount: parseFloat(localStorage.getItem("woodItemCount"))})
+		if (localStorage.getItem("woodCrafters") != undefined) this.setState({woodCrafters: parseInt(localStorage.getItem("woodCrafters"))})
+		if (localStorage.getItem("ironOreCount") != undefined) this.setState({ironOreCount: parseFloat(localStorage.getItem("ironOreCount"))})
+		if (localStorage.getItem("ironMiners") != undefined) this.setState({ironMiners: parseInt(localStorage.getItem("ironMiners"))})
+		if (localStorage.getItem("ironIngotCount") != undefined) this.setState({ironIngotCount: parseFloat(localStorage.getItem("ironIngotCount"))})
+		if (localStorage.getItem("ironSmelters") != undefined) this.setState({ironSmelters: parseInt(localStorage.getItem("ironSmelters"))})
+		if (localStorage.getItem("ironItemCount") != undefined) this.setState({ironItemCount: parseFloat(localStorage.getItem("ironItemCount"))})
+		if (localStorage.getItem("ironItemCrafters") != undefined) this.setState({ironItemCrafters: parseInt(localStorage.getItem("ironItemCrafters"))})
+		if (localStorage.getItem("diamondsCount") != undefined) this.setState({diamondsCount: parseFloat(localStorage.getItem("diamondsCount"))})
+		if (localStorage.getItem("diamondMiners") != undefined) this.setState({diamondMiners: parseInt(localStorage.getItem("diamondMiners"))})
+		//Bools
+		if (localStorage.getItem("unlockedBanjo") != undefined) this.setState({unlockedBanjo: localStorage.getItem("unlockedBanjo") === 'true'})
+		if (localStorage.getItem("gameWon") != undefined) this.setState({gameWon: localStorage.getItem("gameWon") === 'true'})
+		if (localStorage.getItem("unlockedBurrito") != undefined) this.setState({unlockedBurrito: localStorage.getItem("unlockedBurrito") === 'true'})
+		if (localStorage.getItem("unlockedAxe") != undefined) this.setState({unlockedAxe: localStorage.getItem("unlockedAxe") === 'true'})
+		if (localStorage.getItem("unlockedWoodWorkbench") != undefined) this.setState({unlockedWoodWorkbench: localStorage.getItem("unlockedWoodWorkbench") === 'true'})
+		if (localStorage.getItem("unlockedPickaxe") != undefined) this.setState({unlockedPickaxe: localStorage.getItem("unlockedPickaxe") === 'true'})
+		if (localStorage.getItem("unlockedFurnace") != undefined) this.setState({unlockedFurnace: localStorage.getItem("unlockedFurnace") === 'true'})
+		if (localStorage.getItem("unlockedIronWorkbench") != undefined) this.setState({unlockedIronWorkbench: localStorage.getItem("unlockedIronWorkbench") === 'true'})
+		if (localStorage.getItem("unlockedSturdyPickaxe") != undefined) this.setState({unlockedSturdyPickaxe: localStorage.getItem("unlockedSturdyPickaxe") === 'true'})
 	}
 	
 	tick() {
@@ -178,6 +247,7 @@ class Game extends React.Component {
 				this.endTask();
 			}
 		}
+
 	}
 
 	winTheGame() {
@@ -392,6 +462,12 @@ class Game extends React.Component {
 	setDebugText(text) {
 		this.setState({debugText: text})
 	}
+
+	clearSavedData() {
+		<Game key={Math.floor(Math.random(1000000))} />
+		localStorage.clear();
+		window.location.reload();
+	}
 	
 	render() {
 		return (
@@ -565,6 +641,10 @@ class Game extends React.Component {
 					2023<br/>
 					</div>
 				}
+				</div>
+
+				<div>
+				{ <button className="but" onClick={this.clearSavedData.bind(this)}>Clear Saved Data</button> }
 				</div>
 
 				{this.state.debugText}
