@@ -61,23 +61,43 @@ class Game extends React.Component {
 			taskProgress: 0,
 			taskLength: 0,
 
+			dateTimePaused: null,
+			tickCount: 0,
+			readyToSave: false,
+
 			debugText: "",
 		};
 	}
 
 	componentDidMount() {
-		this.timerID = setInterval(() => this.tick(),80);
-		this.timerID = setInterval(() => this.saveData(),3200);
 
 		this.loadData();
+
+		document.addEventListener("visibilitychange", (event) => {
+			if (document.visibilityState == "visible") {
+				console.log("tab is active")
+				if (this.state.dateTimePaused != null) this.iterateTicksOverTime(this.state.dateTimePaused, Date())
+			} else {
+				console.log("tab is inactive")
+				this.setState({dateTimePaused: Date()})
+			}
+		});
+
+		this.checkID = setInterval(() => this.checkForTimeGap(),50);
+		this.tickID = setInterval(() => this.tick(1),80);
+		this.saveID = setInterval(() => this.saveData(),3200);
 		
 	}
 	
 	componentWillUnmount() {
-		clearInterval(this.timerID);
+		clearInterval(this.tickID);  
+		clearInterval(this.saveID);  
+		clearInterval(this.checkID);  
 	}
 
 	saveData() {
+		if (this.state.readyToSave == false) return;
+		localStorage.setItem("dateTimePaused", new Date())
 		localStorage.setItem("money", this.state.money.toString())
 		localStorage.setItem("adsPlaced", this.state.adsPlaced.toString())
 		localStorage.setItem("milestone", this.state.milestone.toString())
@@ -110,6 +130,7 @@ class Game extends React.Component {
 	}
 
 	loadData() {
+		if (localStorage.getItem("dateTimePaused") != undefined) this.setState({dateTimePaused: new Date(localStorage.getItem("dateTimePaused"))})
 		if (localStorage.getItem("money") != undefined) this.setState({money: parseFloat(localStorage.getItem("money"))})
 		if (localStorage.getItem("adsPlaced") != undefined) this.setState({adsPlaced: parseInt(localStorage.getItem("adsPlaced"))})
 		if (localStorage.getItem("milestone") != undefined) this.setState({milestone: parseInt(localStorage.getItem("milestone"))})
@@ -141,8 +162,25 @@ class Game extends React.Component {
 		if (localStorage.getItem("unlockedIronWorkbench") != undefined) this.setState({unlockedIronWorkbench: localStorage.getItem("unlockedIronWorkbench") === 'true'})
 		if (localStorage.getItem("unlockedSturdyPickaxe") != undefined) this.setState({unlockedSturdyPickaxe: localStorage.getItem("unlockedSturdyPickaxe") === 'true'})
 	}
+
+	checkForTimeGap() {
+		var savedDate = new Date() 
+		if (localStorage.getItem("dateTimePaused") != undefined) savedDate = localStorage.getItem("dateTimePaused")
+		this.iterateTicksOverTime(savedDate, Date()) 
+		this.setState({readyToSave: true})
+		clearInterval(this.checkID); 
+	}
+
+	iterateTicksOverTime(date1, date2) {
+		var oldDate = new Date(date1)
+		var nowDat = new Date(date2)
+		var dif = nowDat.getTime() - oldDate.getTime();
+		this.setState({debugText: dif + "," + date1 + "," + date2})
+		this.tick(Math.round(dif / 80))
+	}
 	
-	tick() {
+	tick(count) {
+
 		let tacocnt = this.state.tacoCount
 		let burritocnt = this.state.burritoCount
 		let woodcnt = this.state.woodCount
@@ -155,78 +193,82 @@ class Game extends React.Component {
 		let diacnt = this.state.diamondsCount
 		let moneyGained = 0
 
-		//Sell Items
-		let tacosCanSell = this.state.adsPlaced <= 45 ? 1 : Math.min(tacocnt, 1 * (this.state.adsPlaced / 45))
-		if (tacocnt >= tacosCanSell && tacocnt >= 1) {
-			if (Math.random() < .1 + this.state.adsPlaced * .02) {
-				tacocnt = tacocnt - tacosCanSell
-				moneyGained += tacosCanSell * 1
-			}
-		}
-		let burritosCanSell = this.state.adsPlaced <= 90 ? 1 : Math.min(burritocnt, 1 * (this.state.adsPlaced / 90))
-		if (burritocnt >= burritosCanSell && burritocnt >= 1) {
-			if (Math.random() < .1 + this.state.adsPlaced * .01) {
-				burritocnt = burritocnt - burritosCanSell
-				moneyGained += burritosCanSell * 2
-			}
-		}
-		let woodItemCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(wooditemcnt, 1 * (this.state.adsPlaced / 180))
-		if (wooditemcnt >= woodItemCanSell && wooditemcnt >= 1) {
-			if (Math.random() < .1 + this.state.adsPlaced * .005) {
-				wooditemcnt = wooditemcnt - woodItemCanSell
-				moneyGained += woodItemCanSell * 4
-			}
-		}
-		let ironJewCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(ijewcnt, 1 * (this.state.adsPlaced / 180))
-		if (ijewcnt >= ironJewCanSell && ijewcnt >= 1) {
-			if (Math.random() < .1 + this.state.adsPlaced * .005) {
-				ijewcnt = ijewcnt - ironJewCanSell
-				moneyGained += ironJewCanSell * 8
-			}
-		}
-		let diamondsCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(diacnt, 1 * (this.state.adsPlaced / 180))
-		if (diacnt >= diamondsCanSell && diacnt >= 1) {
-			if (Math.random() < .1 + this.state.adsPlaced * .005) {
-				diacnt = diacnt - diamondsCanSell
-				moneyGained += diamondsCanSell * 64
-			}
-		}
+		for (let index = 0; index < count; index++) {
 
-		//Make Items
-		if (this.state.tacoChefs > 0) {
-			tacocnt = tacocnt + (this.state.tacoChefs / 20)
-		}
-		if (this.state.burritoChefs > 0) {
-			burritocnt = burritocnt + (this.state.burritoChefs / 32)
-		}
-		if (this.state.woodCutters > 0) {
-			woodcnt = woodcnt + (this.state.woodCutters / 64)
-		}
-		if (woodcnt >= 1 && this.state.woodCrafters > 0) {
-			woodcraftprog = woodcraftprog + this.state.woodCrafters / 96 
-			if (woodcraftprog >= 1) {
-				wooditemcnt = wooditemcnt + woodcraftprog
-				woodcnt = woodcnt - woodcraftprog
-				woodcraftprog = 0
+			//Sell Items
+			let tacosCanSell = this.state.adsPlaced <= 45 ? 1 : Math.min(tacocnt, 1 * (this.state.adsPlaced / 45))
+			if (tacocnt >= tacosCanSell && tacocnt >= 1) {
+				if (Math.random() < .1 + this.state.adsPlaced * .02) {
+					tacocnt = tacocnt - tacosCanSell
+					moneyGained += tacosCanSell * 1
+				}
 			}
-		}
-		if (this.state.ironMiners > 0) {
-			if (Math.random() < .64 + this.state.ironMiners * .01) iore = iore + (this.state.ironMiners / 64) 
-		}
-		if (iore >= 1 && this.state.ironSmelters > 0) {
-			iingotprog = iingotprog + this.state.ironSmelters / 128 
-			if (iingotprog >= 1) {
-				iingot = iingot + iingotprog
-				iore = iore - iingotprog 
-				iingotprog = 0
+			let burritosCanSell = this.state.adsPlaced <= 90 ? 1 : Math.min(burritocnt, 1 * (this.state.adsPlaced / 90))
+			if (burritocnt >= burritosCanSell && burritocnt >= 1) {
+				if (Math.random() < .1 + this.state.adsPlaced * .01) {
+					burritocnt = burritocnt - burritosCanSell
+					moneyGained += burritosCanSell * 2
+				}
 			}
-		}
-		if (iingot >= 1 && this.state.ironItemCrafters > 0) {
-			ijewcnt = ijewcnt + (this.state.ironItemCrafters / 128) * 2
-			iingot = iingot - (this.state.ironItemCrafters / 128)
-		}
-		if (this.state.diamondMiners > 0) {
-			if (Math.random() < .64 + this.state.diamondMiners * .01) diacnt = diacnt + (this.state.diamondMiners / 64)
+			let woodItemCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(wooditemcnt, 1 * (this.state.adsPlaced / 180))
+			if (wooditemcnt >= woodItemCanSell && wooditemcnt >= 1) {
+				if (Math.random() < .1 + this.state.adsPlaced * .005) {
+					wooditemcnt = wooditemcnt - woodItemCanSell
+					moneyGained += woodItemCanSell * 4
+				}
+			}
+			let ironJewCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(ijewcnt, 1 * (this.state.adsPlaced / 180))
+			if (ijewcnt >= ironJewCanSell && ijewcnt >= 1) {
+				if (Math.random() < .1 + this.state.adsPlaced * .005) {
+					ijewcnt = ijewcnt - ironJewCanSell
+					moneyGained += ironJewCanSell * 8
+				}
+			}
+			let diamondsCanSell = this.state.adsPlaced <= 180 ? 1 : Math.min(diacnt, 1 * (this.state.adsPlaced / 180))
+			if (diacnt >= diamondsCanSell && diacnt >= 1) {
+				if (Math.random() < .1 + this.state.adsPlaced * .005) {
+					diacnt = diacnt - diamondsCanSell
+					moneyGained += diamondsCanSell * 64
+				}
+			}
+
+			//Make Items
+			if (this.state.tacoChefs > 0) {
+				tacocnt = tacocnt + (this.state.tacoChefs / 20)
+			}
+			if (this.state.burritoChefs > 0) {
+				burritocnt = burritocnt + (this.state.burritoChefs / 32)
+			}
+			if (this.state.woodCutters > 0) {
+				woodcnt = woodcnt + (this.state.woodCutters / 64)
+			}
+			if (woodcnt >= 1 && this.state.woodCrafters > 0) {
+				woodcraftprog = woodcraftprog + this.state.woodCrafters / 96 
+				if (woodcraftprog >= 1) {
+					wooditemcnt = wooditemcnt + woodcraftprog
+					woodcnt = woodcnt - woodcraftprog
+					woodcraftprog = 0
+				}
+			}
+			if (this.state.ironMiners > 0) {
+				if (Math.random() < .64 + this.state.ironMiners * .01) iore = iore + (this.state.ironMiners / 64) 
+			}
+			if (iore >= 1 && this.state.ironSmelters > 0) {
+				iingotprog = iingotprog + this.state.ironSmelters / 128 
+				if (iingotprog >= 1) {
+					iingot = iingot + iingotprog
+					iore = iore - iingotprog 
+					iingotprog = 0
+				}
+			}
+			if (iingot >= 1 && this.state.ironItemCrafters > 0) {
+				ijewcnt = ijewcnt + (this.state.ironItemCrafters / 128) * 2
+				iingot = iingot - (this.state.ironItemCrafters / 128)
+			}
+			if (this.state.diamondMiners > 0) {
+				if (Math.random() < .64 + this.state.diamondMiners * .01) diacnt = diacnt + (this.state.diamondMiners / 64)
+			}
+
 		}
 
 		this.setState({tacoCount: tacocnt})
@@ -247,6 +289,8 @@ class Game extends React.Component {
 				this.endTask();
 			}
 		}
+
+		this.setState({tickCount: this.state.tickCount + 1})
 
 	}
 
@@ -300,7 +344,7 @@ class Game extends React.Component {
 	getCost(tag) {
 		if (tag === "ad") {
 			if (this.state.adsPlaced < 16) return 16 * (this.state.adsPlaced + 1)
-			else return 16 * (this.state.adsPlaced + 1) + 12 * (this.state.adsPlaced - 15) * (this.state.adsPlaced - 15)
+			else return 16 * (this.state.adsPlaced + 1) + 4 * (this.state.adsPlaced - 15) * (this.state.adsPlaced - 15)
 		} 
 		else if (tag === "tacoChef") return 16 * (this.state.tacoChefs + 1)
 		else if (tag === "burritoChef") return 32 * (this.state.burritoChefs + 1)
